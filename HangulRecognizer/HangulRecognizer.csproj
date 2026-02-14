@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+	<ApplicationIcon>Assets\iconhangul.ico</ApplicationIcon>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<None Include="Data\**\*.*">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MaterialDesignColors" Version="5.3.0" />
+    <PackageReference Include="MaterialDesignThemes" Version="5.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\test\a\" />
+    <Folder Include="Data\test\bieup\" />
+    <Folder Include="Data\test\chieut\" />
+    <Folder Include="Data\test\digeut\" />
+    <Folder Include="Data\test\eo\" />
+    <Folder Include="Data\test\eu\" />
+    <Folder Include="Data\test\giyeok\" />
+    <Folder Include="Data\test\hieut\" />
+    <Folder Include="Data\test\i\" />
+    <Folder Include="Data\test\ieung\" />
+    <Folder Include="Data\test\jieut\" />
+    <Folder Include="Data\test\kieuk\" />
+    <Folder Include="Data\test\mieum\" />
+    <Folder Include="Data\test\nieun\" />
+    <Folder Include="Data\test\tieut\" />
+    <Folder Include="Data\test\ya\" />
+    <Folder Include="Data\test\yeo\" />
+    <Folder Include="Data\test\yo\" />
+    <Folder Include="Data\test\yu\" />
+    <Folder Include="Data\test\u\" />
+    <Folder Include="Data\test\siot\" />
+    <Folder Include="Data\test\rieul\" />
+    <Folder Include="Data\test\pieup\" />
+    <Folder Include="Data\test\o\" />
+  </ItemGroup>
+
+</Project>

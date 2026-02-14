@@ -1,0 +1,119 @@
+﻿<Window x:Class="HangulRecognizer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Hangul Recognizer"
+        Height="500"
+        Width="900"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
+        Background="#1E1E1E">
+
+    <Grid Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+
+        <!--LEWY PANEL-->
+        <StackPanel Grid.Column="0" Margin="0,0,20,0">
+
+            <TextBlock Text="Hangul MLP"
+                       FontSize="26"
+                       FontWeight="Bold"
+                       Foreground="White"/>
+
+            <TextBlock Text="Model"
+                       Margin="0,10,0,5"
+                       Foreground="#AAAAAA"/>
+
+            <!--LISTA MODELI-->
+            <ComboBox x:Name="ModelComboBox"
+                      Height="30"
+                      Margin="0,0,0,10"/>
+
+            <Button Content="Załaduj model"
+                    Height="40"
+                    Margin="0,0,0,10"
+                    Click="LoadModel_Click"/>
+
+            <Button Content="Trenuj model"
+                    Height="40"
+                    Margin="0,0,0,10"
+                    Click="Train_Click"/>
+
+            <ProgressBar x:Name="TrainingProgress"
+                         Height="20"
+                         Margin="0,0,0,10"
+                         Minimum="0"
+                         Maximum="100"/>
+
+            <TextBlock x:Name="StatusText"
+                       Foreground="#88FF88"
+                       Text="Gotowy"/>
+
+            <Button Content="Losowa próbka"
+                    Height="40"
+                    Margin="0,20,0,0"
+                    Click="RandomSample_Click"/>
+
+            <Button Content="Raporty"
+                    Height="40"
+                    Margin="0,10,0,0"
+                    Click="OpenReports_Click"/>
+
+            <Button Content="O aplikacji"
+                    Height="40"
+                    Margin="0,10,0,0"
+                    Click="About_Click"/>
+        </StackPanel>
+
+        <!--PRAWY PANEL-->
+        <Border Grid.Column="1"
+        Background="#252526"
+        CornerRadius="12"
+        Padding="20">
+
+            <Grid>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <!--nagłówek-->
+                    <RowDefinition Height="*"/>
+                    <!--predykcja-->
+                    <RowDefinition Height="Auto"/>
+                    <!--napis accuracy-->
+                    <RowDefinition Height="Auto"/>
+                    <!--wykres-->
+                </Grid.RowDefinitions>
+
+                <!--Tytuł-->
+                <TextBlock Grid.Row="0"
+                   Text="Predykcja"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   Foreground="White"/>
+
+                <!--Predykcja-->
+                <TextBlock Grid.Row="1"
+                   x:Name="PredictionText"
+                   Margin="0,10,0,0"
+                   Foreground="#DDDDDD"
+                   TextWrapping="Wrap"/>
+
+                <!--Label wykresu-->
+                <TextBlock Grid.Row="2"
+                   Text="Accuracy (epoki)"
+                   Margin="0,20,0,5"
+                   Foreground="#AAAAAA"/>
+
+                <!--Wykres-->
+                <Canvas Grid.Row="3"
+                x:Name="AccuracyCanvas"
+                Height="180"
+                Background="#1E1E1E"/>
+
+            </Grid>
+        </Border>
+
+    </Grid>
+</Window>
