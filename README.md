@@ -6,6 +6,12 @@ Projekt został napisany w czystym C# bez użycia bibliotek ML (np. ML.NET, Tens
 
 ---
 
+## Preview
+
+![App Screenshot](Assets/screenshot.png)
+
+---
+
 ## Funkcjonalności
 
 - Własna implementacja MLP (4096 → 128 → 24)
