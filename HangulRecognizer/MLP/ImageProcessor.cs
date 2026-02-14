@@ -23,13 +23,13 @@ namespace HangulRecognizer.MLP
             float[] v = new float[size * size];
             int k = 0;
 
-            //1️⃣ RGB → GRAYSCALE [0..1]
+            //RGB → GRAYSCALE [0..1]
             for (int i = 0; i < px.Length; i += 4)
             {
                 v[k++] = 1f - (px[i] + px[i + 1] + px[i + 2]) / 765f;
             }
 
-            //2️⃣ NORMALIZACJA (KRYTYCZNE)
+            //NORMALIZACJA (KRYTYCZNE)
             float mean = v.Average();
             float std = (float)Math.Sqrt(
                 v.Select(x => (x - mean) * (x - mean)).Average()
