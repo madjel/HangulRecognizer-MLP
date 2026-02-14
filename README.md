@@ -8,7 +8,7 @@ Projekt został napisany w czystym C# bez użycia bibliotek ML (np. ML.NET, Tens
 
 ## Preview
 
-![App Screenshot](Assets/screenshot.png)
+![App Screenshot](HangulRecognizer/Assets/screenshot.png)
 
 ---
 
