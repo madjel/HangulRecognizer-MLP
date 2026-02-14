@@ -1,4 +1,4 @@
-#Hangul Recognizer (MLP od podstaw)
+# Hangul Recognizer (MLP od podstaw)
 
 Desktopowa aplikacja WPF do rozpoznawania znaków alfabetu koreańskiego (Hangul) przy użyciu własnoręcznie zaimplementowanej sieci neuronowej typu Multi-Layer Perceptron (MLP).
 
@@ -6,7 +6,7 @@ Projekt został napisany w czystym C# bez użycia bibliotek ML (np. ML.NET, Tens
 
 ---
 
-##Funkcjonalności
+## Funkcjonalności
 
 - Własna implementacja MLP (4096 → 128 → 24)
 - Obsługa biasów (warstwa ukryta i wyjściowa)
@@ -24,7 +24,7 @@ Projekt został napisany w czystym C# bez użycia bibliotek ML (np. ML.NET, Tens
 
 ---
 
-##Architektura
+## Architektura
 
 Projekt podzielony jest na logiczne warstwy:
 
@@ -37,7 +37,7 @@ Projekt podzielony jest na logiczne warstwy:
 
 ---
 
-##Technologie
+## Technologie
 
 - .NET 8
 - WPF
@@ -46,7 +46,7 @@ Projekt podzielony jest na logiczne warstwy:
 
 ---
 
-##Uruchomienie
+## Uruchomienie
 
 Build w trybie Release:
 
