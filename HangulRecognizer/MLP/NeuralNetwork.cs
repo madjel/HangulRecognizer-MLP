@@ -66,8 +66,13 @@ namespace HangulRecognizer.MLP
 
         //ACTIVATIONS
 
+        // Funkcja aktywacji ReLU: f(x) = max(0, x)
         private float ReLU(float x) => x > 0 ? x : 0;
-        private float dReLU(float x) => x > 0 ? 1f : 0f;
+
+        // Pochodna ReLU używana w backpropagation:
+        // f'(x) = 1 dla x > 0
+        // f'(x) = 0 dla x <= 0
+        private float dReLU(float x) => x > 0 ? 1f : 0f;   
 
         private float[] Softmax(float[] z)
         {
@@ -91,28 +96,32 @@ namespace HangulRecognizer.MLP
 
         private float[] Forward(float[] x)
         {
-            // input → hidden
+            // ===== WARSTWA UKRYTA =====
+            // Obliczenie: z¹ = W¹x + b¹
             for (int j = 0; j < hiddenSize; j++)
             {
-                float sum = biasH[j];
-                for (int i = 0; i < inputSize; i++)
-                    sum += x[i] * weightsIH[i, j];
+                float sum = biasH[j]; // dodanie biasu b¹
+                for (int i = 0; i < inputSize; i++) 
+                    sum += x[i] * weightsIH[i, j]; // mnożenie macierz-wektor (W¹x)
 
-                hiddenZ[j] = sum;
-                hidden[j] = ReLU(sum);
+                hiddenZ[j] = sum; // zapis wartości przed aktywacją (z¹)
+                hidden[j] = ReLU(sum); // funkcja aktywacji ReLU: a¹ = ReLU(z¹)
             }
 
-            //HIDDEN → OUTPUT (LOGITS)
+            // ===== WARSTWA WYJŚCIOWA =====
+            // Obliczenie: z² = W²a¹ + b²
             for (int j = 0; j < outputSize; j++)
             {
-                float sum = biasO[j];
+                float sum = biasO[j]; // dodanie biasu b²
                 for (int i = 0; i < hiddenSize; i++)
-                    sum += hidden[i] * weightsHO[i, j];
+                    sum += hidden[i] * weightsHO[i, j]; // W²a¹
 
-                output[j] = sum;
+                output[j] = sum; // logity (z²)
             }
 
-            return Softmax(output);
+            // ===== FUNKCJA SOFTMAX =====
+            // Zamiana logitów na prawdopodobieństwa klas
+            return Softmax(output); // ŷ = softmax(z²)
         }
 
         //TRAIN
@@ -141,13 +150,24 @@ namespace HangulRecognizer.MLP
                     int pred = ArgMax(probs);
                     if (pred == y[idx]) correct++;
 
-                    //SOFTMAX + CROSS ENTROPY GRADIENT
+                    // ===== OBLICZENIE GRADIENTU DLA SOFTMAX + CROSS ENTROPY =====
+
+                    // kopiujemy przewidywane prawdopodobieństwa
                     float[] gradOut = new float[outputSize];
                     for (int j = 0; j < outputSize; j++)
                         gradOut[j] = probs[j];
+                    
+                    // odejmujemy 1 dla prawdziwej klasy
                     gradOut[y[idx]] -= 1f;
 
-                    //HIDDEN GRADIENTS
+                    // To jest uproszczony gradient funkcji:
+                    // L = - Σ y log(ŷ)
+                    // dla softmax + cross entropy: dL/dz = ŷ - y
+
+
+                    // ===== BACKPROPAGATION =====
+                    // Obliczenie gradientu dla warstwy ukrytej
+
                     float[] gradH = new float[hiddenSize];
                     for (int i = 0; i < hiddenSize; i++)
                     {
@@ -155,20 +175,23 @@ namespace HangulRecognizer.MLP
                         for (int j = 0; j < outputSize; j++)
                             sum += gradOut[j] * weightsHO[i, j];
 
+                        // zastosowanie pochodnej ReLU
                         gradH[i] = sum * dReLU(hiddenZ[i]);
                     }
 
-                    //UPDATE HO
+                    // ===== AKTUALIZACJA WAG (SGD) =====
+
+                    // aktualizacja wag między warstwą ukrytą a wyjściową
                     for (int i = 0; i < hiddenSize; i++)
                         for (int j = 0; j < outputSize; j++)
                             weightsHO[i, j] -= lr * gradOut[j] * hidden[i];
 
-                    //UPDATE IH
+                    // aktualizacja wag między wejściem a warstwą ukrytą
                     for (int i = 0; i < inputSize; i++)
                         for (int j = 0; j < hiddenSize; j++)
                             weightsIH[i, j] -= lr * gradH[j] * X[idx][i];
 
-                    //UPDATE BIASES
+                    // aktualizacja biasów
                     for (int j = 0; j < outputSize; j++)
                         biasO[j] -= lr * gradOut[j] * 0.1f;
 
@@ -184,7 +207,7 @@ namespace HangulRecognizer.MLP
             }
         }
 
-        //PREDYKCJA
+        //PREDICTION
 
         public int Predict(float[] x)
         {
@@ -218,7 +241,7 @@ namespace HangulRecognizer.MLP
             }
         }
 
-        //SERIALIZACJA
+        //SERIALIZATION
 
         public NeuralNetworkModel Export() => new()
         {

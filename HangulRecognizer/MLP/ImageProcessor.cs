@@ -23,19 +23,23 @@ namespace HangulRecognizer.MLP
             float[] v = new float[size * size];
             int k = 0;
 
-            //RGB → GRAYSCALE [0..1]
+            // Konwersja RGB → grayscale i odwrócenie jasności
             for (int i = 0; i < px.Length; i += 4)
             {
                 v[k++] = 1f - (px[i] + px[i + 1] + px[i + 2]) / 765f;
             }
 
-            //NORMALIZACJA (KRYTYCZNE)
+            // ===== NORMALIZACJA STATYSTYCZNA =====
+            // średnia
             float mean = v.Average();
+
+            // odchylenie standardowe
             float std = (float)Math.Sqrt(
                 v.Select(x => (x - mean) * (x - mean)).Average()
                 + 1e-6f
             );
 
+            // standaryzacja: (x - μ) / σ
             for (int i = 0; i < v.Length; i++)
                 v[i] = (v[i] - mean) / std;
 
