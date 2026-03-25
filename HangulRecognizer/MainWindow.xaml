@@ -71,19 +71,21 @@
         <Border Grid.Column="1"
         Background="#252526"
         CornerRadius="12"
-        Padding="20">
+        Padding="10">
 
             <Grid>
 
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
-                    <!--nagłówek-->
+                    <!-- Tytuł -->
+                    <RowDefinition Height="Auto"/>
+                    <!-- Czas predykcji -->
                     <RowDefinition Height="*"/>
-                    <!--predykcja-->
+                    <!-- Predykcja TOP 3 -->
                     <RowDefinition Height="Auto"/>
-                    <!--napis accuracy-->
+                    <!-- Napis accuracy -->
                     <RowDefinition Height="Auto"/>
-                    <!--wykres-->
+                    <!-- Wykres -->
                 </Grid.RowDefinitions>
 
                 <!--Tytuł-->
@@ -93,25 +95,30 @@
                    FontWeight="Bold"
                    Foreground="White"/>
 
-                <!--Predykcja-->
+                <!--Czas predykcji-->
                 <TextBlock Grid.Row="1"
+                   x:Name="PredictionTimeText"
+                   Margin="0,5,0,5"
+                   Foreground="#88FF88"/>
+
+                <!--Predykcja TOP 3-->
+                <TextBlock Grid.Row="2"
                    x:Name="PredictionText"
-                   Margin="0,10,0,0"
+                   Margin="0,5,0,0"
                    Foreground="#DDDDDD"
                    TextWrapping="Wrap"/>
 
                 <!--Label wykresu-->
-                <TextBlock Grid.Row="2"
+                <TextBlock Grid.Row="3"
                    Text="Accuracy (epoki)"
                    Margin="0,20,0,5"
                    Foreground="#AAAAAA"/>
 
                 <!--Wykres-->
-                <Canvas Grid.Row="3"
+                <Canvas Grid.Row="4"
                 x:Name="AccuracyCanvas"
                 Height="180"
                 Background="#1E1E1E"/>
-
             </Grid>
         </Border>
 

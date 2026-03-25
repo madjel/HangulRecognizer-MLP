@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -117,7 +118,7 @@ namespace HangulRecognizer
 
                 ConfusionMatrix.SaveCsv(
                     cm,
-                    "Reports/confusion_matrix_train.csv");
+                    "Reports/confusion_matrix_train.csv");       
             });
 
             LoadModelList();
@@ -126,7 +127,7 @@ namespace HangulRecognizer
 
 
         //LOSOWA PRÓBKA
-        private void RandomSample_Click(object sender, RoutedEventArgs e)
+        private async void RandomSample_Click(object sender, RoutedEventArgs e)
         {
             if (nn == null)
             {
@@ -134,33 +135,53 @@ namespace HangulRecognizer
                 return;
             }
 
+            StatusText.Text = "Predykcja...";
+
             var data = DataLoader.Load("Data/train");
             var rnd = new Random();
             var s = data[rnd.Next(data.Count)];
 
-            var probs = nn.PredictProbs(s.x);
+            int runs = 100;
 
-            var top3 = probs
-                .Select((v, i) => new { Index = i, Value = v })
-                .OrderByDescending(x => x.Value)
-                .Take(3)
-                .ToList();
-
-            string result =
-                $"Plik: {s.file}\n" +
-                $"Oczekiwane: {LabelMap.Name(s.y)}\n\n" +
-                $"TOP 3:\n";
-
-            int rank = 1;
-            foreach (var item in top3)
+            var result = await Task.Run(() =>
             {
-                result +=
-                    $"{rank}. {LabelMap.Name(item.Index)} " +
-                    $"({item.Value * 100:F2}%)\n";
-                rank++;
-            }
+                var watch = Stopwatch.StartNew();
 
-            PredictionText.Text = result;
+                float[] probs = null!;
+                for (int i = 0; i < runs; i++)
+                {
+                    probs = nn.PredictProbs(s.x);
+                }
+
+                watch.Stop();
+                double avgTime = watch.Elapsed.TotalMilliseconds / runs;
+
+                var top3 = probs
+                    .Select((v, i) => new { Index = i, Value = v })
+                    .OrderByDescending(x => x.Value)
+                    .Take(3)
+                    .ToList();
+
+                string top3Text = $"Plik: {s.file}\n" +
+                                  $"Oczekiwane: {LabelMap.Name(s.y)}\n\n" +
+                                  $"TOP 3:\n";
+
+                int rank = 1;
+                foreach (var item in top3)
+                {
+                    top3Text += $"{rank}. {LabelMap.Name(item.Index)} ({item.Value * 100:F2}%)\n";
+                    rank++;
+                }
+
+                return (top3Text, avgTime);
+            });
+
+            Dispatcher.Invoke(() =>
+            {
+                PredictionText.Text = result.top3Text;
+                PredictionTimeText.Text = $"Średni czas predykcji: {result.avgTime:F6} ms";
+                StatusText.Text = "Gotowe";
+            });
         }
 
 

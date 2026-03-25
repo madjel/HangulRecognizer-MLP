@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace HangulRecognizer.MLP
 {
@@ -132,6 +133,8 @@ namespace HangulRecognizer.MLP
             int epochs,
             float lr)
         {
+            var totalWatch = Stopwatch.StartNew(); //czas
+
             if (X.Count != y.Count)
                 throw new ArgumentException("X and y size mismatch");
 
@@ -139,6 +142,8 @@ namespace HangulRecognizer.MLP
 
             for (int ep = 0; ep < epochs; ep++)
             {
+                var epochWatch = Stopwatch.StartNew(); //czas
+
                 Shuffle(indices);
 
                 int correct = 0;
@@ -200,11 +205,22 @@ namespace HangulRecognizer.MLP
                 }
 
                 float acc = (float)correct / X.Count * 100f;
+
+                epochWatch.Stop();
+
+                if ((ep + 1) % 10 == 0)
+                {
+                    Debug.WriteLine(
+                        $"Epoka {ep + 1}: {epochWatch.ElapsedMilliseconds} ms, acc {acc:F2}%");
+                }
+
                 OnEpochEnd?.Invoke(ep, acc);
 
                 if (acc > 99f)
                     break;
             }
+            totalWatch.Stop();
+            Debug.WriteLine($"Całkowity czas treningu: {totalWatch.ElapsedMilliseconds} ms");
         }
 
         //PREDICTION
